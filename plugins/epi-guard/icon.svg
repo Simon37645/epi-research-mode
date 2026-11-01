@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Delete guard">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#2b2f36"/>
+  <path d="M20 22h24M27 22v-3h10v3" stroke="#9fb3c8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+  <path d="M23 22l2 22h14l2-22" stroke="#9fb3c8" stroke-width="2.6" stroke-linejoin="round" fill="none"/>
+  <path d="M20 50l24-28" stroke="#e5534b" stroke-width="4.4" stroke-linecap="round"/>
+  <path d="M24.5 29.5h15" stroke="#57b6f0" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-epi-mode
+      name: '@local/dsh-epi-mode'

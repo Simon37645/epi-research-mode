@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "note": "资源策略，不是资源数值。守护进程每次启动现测核数/内存/磁盘，再按这里把策略落到这台机器上。换机器不用改。",
+  "policy": {
+    "maxConcurrentAgents": 3,
+    "maxThreadsPerProcess": "auto",
+    "memoryFraction": 0.25,
+    "memoryCapMB": null,
+    "maxWallSeconds": 3600,
+    "minFreeDiskGB": 20,
+    "maxOutputGrowthMB": 4096,
+    "priority": "below-normal"
+  },
+  "notes": {
+    "maxThreadsPerProcess": "auto = max(1, min(4, 核数/2))。多子 agent 并行时 BLAS 线程会相乘，这是打满 CPU 的主因。要更大就写具体数字。",
+    "memoryFraction": "单任务内存上限 = 总内存 × 该比例；守护进程再保证 并发×上限 ≤ 总内存×0.8，超了自动收敛。",
+    "memoryCapMB": "非 null 时覆盖 memoryFraction，用于在某台机器上钉死绝对值。",
+    "maxWallSeconds": "单任务墙钟超时，到点整组终止，避免不收敛的模型挂一夜。",
+    "minFreeDiskGB": "低于此值直接拒绝接单，不排队。",
+    "maxOutputGrowthMB": "单个任务产物增量上限，防止一次错误 join 写爆磁盘。",
+    "priority": "idle / below-normal / normal。"
+  }
+}

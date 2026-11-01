@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Epidemiology Mode Delete Guard",
+    "description": "Blocks destructive delete commands inside the epidemiology research preset and redirects them to archive."
+  }
+}

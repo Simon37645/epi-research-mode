@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-01T13:57:59.363Z",
+  "note": "由「设置 → 科研模式」写入。主 agent 派发前读本文件决定每个角色用哪个模型。",
+  "defaults": {
+    "onFailure": "inherit",
+    "concurrencyMax": 4
+  },
+  "roles": {
+    "executor": {
+      "id": "executor",
+      "label": "执行者",
+      "hint": "写码、跑数、出表。禁止解读结果。",
+      "provider": "deepseek-account",
+      "model": "deepseek-flash",
+      "concurrencyMax": 3
+    },
+    "plotter": {
+      "id": "plotter",
+      "label": "画图者",
+      "hint": "按科研规范作图。禁止改动数值。",
+      "provider": "deepseek-account",
+      "model": "deepseek-flash",
+      "concurrencyMax": 2
+    },
+    "reviewer": {
+      "id": "reviewer",
+      "label": "审稿人",
+      "hint": "独立审稿，出四档结论。禁止改文件。",
+      "provider": "deepseek-account",
+      "model": "deepseek-flash",
+      "concurrencyMax": 1
+    }
+  }
+}

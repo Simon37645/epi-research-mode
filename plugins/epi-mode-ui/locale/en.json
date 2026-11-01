@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "title": "Epidemiology Research Mode",
+    "description": "Per-role model routing and role prompts for the epidemiology research mode, editable in Settings."
+  },
+  "section": {
+    "title": "Research mode",
+    "intro": "Assign a model and preset prompt to each role. Saving writes back to the skill directory, and the next dispatch follows it."
+  }
+}

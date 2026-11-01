@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.epi-supervisor/
+_archive/
+.DS_Store
+Thumbs.db
+node_modules/
+*.log

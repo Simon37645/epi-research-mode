@@ -1,0 +1,22 @@
+{
+  "name": "@local/dsh-epi-guard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Denies destructive delete commands in the epidemiology research mode and points to archive instead.",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/en.json",
+    "locale/zh.json",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" }
+  }
+}

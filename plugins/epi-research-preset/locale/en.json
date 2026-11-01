@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Epidemiology Research Mode Preset",
+    "description": "Adds a selectable agent preset where the lead agent plans, dispatches executors and a plotter, and gates delivery on independent review."
+  }
+}

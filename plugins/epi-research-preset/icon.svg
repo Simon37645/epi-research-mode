@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Epidemiology research mode preset">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0b4f86"/>
+  <path d="M14 44h36" stroke="#e8f2fb" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <path d="M16 38l7-9 6 5 7-12 6 8 6-11" stroke="#57b6f0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="16" cy="38" r="2.6" fill="#e8f2fb"/>
+  <circle cx="23" cy="29" r="2.6" fill="#e8f2fb"/>
+  <circle cx="29" cy="34" r="2.6" fill="#e8f2fb"/>
+  <circle cx="36" cy="22" r="2.6" fill="#e8f2fb"/>
+  <circle cx="42" cy="30" r="2.6" fill="#e8f2fb"/>
+  <circle cx="48" cy="19" r="2.6" fill="#e8f2fb"/>
+  <path d="M45 45.5l4.2 4.2M45 49.7l4.2-4.2" stroke="#57b6f0" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="47.1" cy="47.6" r="5.4" stroke="#57b6f0" stroke-width="2.2" fill="none"/>
+</svg>

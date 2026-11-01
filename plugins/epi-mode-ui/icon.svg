@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Epidemiology research mode">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0f6fbf"/>
+  <path d="M25 16h14v3.4h-3.1v8.9l9.6 16.2c1.5 2.6-.3 5.8-3.3 5.8H17.8c-3 0-4.8-3.2-3.3-5.8l9.6-16.2v-8.9H21V16z" fill="#e8f2fb"/>
+  <path d="M22.8 35.6h18.4l5.7 9.7c.5.9-.1 2-1.1 2H18.2c-1 0-1.6-1.1-1.1-2l5.7-9.7z" fill="#57b6f0"/>
+  <circle cx="27" cy="42" r="2.3" fill="#0f6fbf"/>
+  <circle cx="33.5" cy="45" r="1.7" fill="#0f6fbf"/>
+  <circle cx="37" cy="40.5" r="1.4" fill="#0f6fbf"/>
+</svg>
