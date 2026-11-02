@@ -70,6 +70,12 @@ const PARAMETERS = {
       type: 'object',
       description: '可选的输出 JSON Schema（object 根）。给了就返回校验过的对象，否则返回文本。',
     },
+    background: {
+      type: 'boolean',
+      description:
+        'true = 立刻返回子代理 id 与后台状态，不阻塞本步，跑完结果作为通知投递回来；' +
+        '默认 false = 等到跑完直接拿结果。要多路并发请在本条消息里多发几次调用，而不是靠 background。',
+    },
   },
   required: ['role', 'prompt'],
 }
@@ -83,6 +89,8 @@ const OUTPUT_SCHEMA = {
     structured: { type: 'object' },
     diagnostic: { type: 'string' },
     route: { type: 'object' },
+    subagentId: { type: 'string' },
+    background: { type: 'boolean' },
   },
   required: ['role', 'stopReason', 'text'],
 }
@@ -121,6 +129,27 @@ export function apply(ctx) {
         },
       },
       isConcurrencySafe: () => true,
+      presentCall: (args) => ({
+        card: 'generic',
+        title: `epi_dispatch · ${args && args.role ? args.role : '?'}` +
+          (args && args.background ? '（后台）' : ''),
+        kind: 'execute',
+      }),
+      presentResult: (args, result) => {
+        const value = result && result.value && typeof result.value === 'object' ? result.value : null
+        if (!value) return undefined
+        const route = value.route
+          ? `${value.route.provider || '?'}/${value.route.model || '?'} @ ${value.route.reasoningEffort || '默认'}`
+          : ''
+        const head = value.background
+          ? `${value.role} 已在后台启动 · ${route} · subagent ${value.subagentId || '?'}`
+          : `${value.role} ${value.stopReason} · ${route}${value.subagentId ? ` · subagent ${value.subagentId}` : ''}`
+        return {
+          card: 'generic',
+          title: head,
+          content: [{ type: 'text', text: head }],
+        }
+      },
       async execute(args, exec) {
         const parent = exec.agent
         if (!parent) throw new Error('epi_dispatch 需要调用方 agent（exec.agent 为空）')
@@ -150,6 +179,31 @@ export function apply(ctx) {
           delivery: 'parent',
         })
 
+        const childId = activation && activation.childId ? String(activation.childId) : ''
+
+        // 后台模式：立刻返回，跑完由运行时把结果作为通知投递回来。
+        if (args && args.background === true) {
+          Promise.resolve(activation.result)
+            .catch(() => {})
+            .finally(() => {
+              try {
+                activation.dispose && activation.dispose()
+              } catch {}
+            })
+          return {
+            role: roleId,
+            stopReason: 'started',
+            text: '',
+            background: true,
+            subagentId: childId,
+            route: {
+              provider: role.provider,
+              model: role.model,
+              reasoningEffort: role.reasoningEffort || 'default',
+            },
+          }
+        }
+
         let result
         try {
           result = await activation.result
@@ -173,6 +227,7 @@ export function apply(ctx) {
         const structured = result && result.structured
         if (structured && typeof structured === 'object') value.structured = structured
         if (result && result.diagnostic) value.diagnostic = String(result.diagnostic)
+        if (childId) value.subagentId = childId
         return value
       },
     }),
