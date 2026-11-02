@@ -77,21 +77,24 @@ DSH 内置的 `workflow` 工具**明确拒绝 `reasoningEffort`**（传了会报
 
 2. **改一处路径**：打开 `plugins/epi-research-preset/cordis.patch.yml`，把 `customSkillDirs` 换成上一步打印的**技能父目录**（绝对路径）。
 
-3. **装三个插件**（DSH 里用插件管理器，或命令行）：
+3. **装四个插件**（DSH 里用插件管理器，或命令行）：
 
    ```
    plugin_manager install_bundle <绝对路径>/plugins/epi-research-preset
    plugin_manager install_bundle <绝对路径>/plugins/epi-mode-ui
+   plugin_manager install_bundle <绝对路径>/plugins/epi-dispatch
    plugin_manager install_bundle <绝对路径>/plugins/epi-guard
    ```
 
-4. **把守卫收进模式内**（否则它全局生效）：
+4. **把守卫和派发工具收进模式内**（否则它们全局生效）：
 
    ```
    plugin_manager set_plugin include:dsh-epi-guard enabled:false
+   plugin_manager set_plugin include:dsh-epi-dispatch enabled:false
    ```
 
-   预设里那一行仍会挂载它，于是只有科研模式有守卫。
+   预设里那两行仍会挂载它们，于是只有科研模式有删除守卫和 `epi_dispatch`。
+   注意：这一步必须在装完插件后做，否则再装一次会把行重新启用。
 
 5. 刷新页面 → 设置 → Agent 预设，选「流行病学科研模式」开新会话。
 
