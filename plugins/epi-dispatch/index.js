@@ -129,27 +129,6 @@ export function apply(ctx) {
         },
       },
       isConcurrencySafe: () => true,
-      presentCall: (args) => ({
-        card: 'generic',
-        title: `epi_dispatch · ${args && args.role ? args.role : '?'}` +
-          (args && args.background ? '（后台）' : ''),
-        kind: 'execute',
-      }),
-      presentResult: (args, result) => {
-        const value = result && result.value && typeof result.value === 'object' ? result.value : null
-        if (!value) return undefined
-        const route = value.route
-          ? `${value.route.provider || '?'}/${value.route.model || '?'} @ ${value.route.reasoningEffort || '默认'}`
-          : ''
-        const head = value.background
-          ? `${value.role} 已在后台启动 · ${route} · subagent ${value.subagentId || '?'}`
-          : `${value.role} ${value.stopReason} · ${route}${value.subagentId ? ` · subagent ${value.subagentId}` : ''}`
-        return {
-          card: 'generic',
-          title: head,
-          content: [{ type: 'text', text: head }],
-        }
-      },
       async execute(args, exec) {
         const parent = exec.agent
         if (!parent) throw new Error('epi_dispatch 需要调用方 agent（exec.agent 为空）')
