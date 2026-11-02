@@ -27,6 +27,7 @@ const rolesFile = () => path.join(skillDir(), 'config', 'roles.json')
 const promptFile = (id) => path.join(skillDir(), 'roles', `${id}.md`)
 
 const ROLE_IDS = ['executor', 'plotter', 'reviewer']
+const EFFORTS = new Set(['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'])
 
 const DEFAULT_ROLES = {
   executor: {
@@ -71,6 +72,7 @@ function readRoles() {
       hint: base.hint,
       provider: typeof row.provider === 'string' && row.provider ? row.provider : base.provider,
       model: typeof row.model === 'string' && row.model ? row.model : base.model,
+      reasoningEffort: EFFORTS.has(row.reasoningEffort) ? row.reasoningEffort : '',
       concurrencyMax: Number.isFinite(row.concurrencyMax) ? row.concurrencyMax : base.concurrencyMax,
     }
   }
@@ -105,6 +107,9 @@ function saveState(payload) {
       const model = safeText(row.model, 160)
       if (provider) current.roles[id].provider = provider
       if (model) current.roles[id].model = model
+      if (typeof row.reasoningEffort === 'string') {
+        current.roles[id].reasoningEffort = EFFORTS.has(row.reasoningEffort) ? row.reasoningEffort : ''
+      }
     }
     const file = rolesFile()
     fs.mkdirSync(path.dirname(file), { recursive: true })

@@ -158,6 +158,29 @@ window.__ModuleLoader__.load({
         ),
         h(
           'div',
+          { style: { display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 } },
+          h('div', { style: { fontSize: 12, color: T.dim, width: 64, flex: 'none' } }, '推理强度'),
+          h(
+            'select',
+            {
+              value: current.reasoningEffort || '',
+              onChange: (event) => actions.setEffort(role.id, event.target.value),
+              style: field({ width: 180, flex: 'none', cursor: 'pointer' }),
+            },
+            h('option', { value: '' }, '跟随会话默认'),
+            ...['low', 'medium', 'high', 'xhigh', 'max'].map((effort) =>
+              h('option', { key: effort, value: effort }, effort)),
+          ),
+          h(
+            'div',
+            { style: { fontSize: 11, color: T.dim, flex: 1 } },
+            current.reasoningEffort
+              ? `该角色派发时用 ${current.reasoningEffort}`
+              : '未指定时继承主 agent 当前档位',
+          ),
+        ),
+        h(
+          'div',
           { style: { display: 'flex', gap: 10, alignItems: 'center' } },
           h('div', { style: { fontSize: 12, color: T.dim, width: 64, flex: 'none' } }, '行为契约'),
           h(
@@ -240,7 +263,11 @@ window.__ModuleLoader__.load({
           setData(payload)
           const nextModels = {}
           for (const role of payload.roles) {
-            nextModels[role.id] = { provider: role.provider, model: role.model }
+            nextModels[role.id] = {
+              provider: role.provider,
+              model: role.model,
+              reasoningEffort: role.reasoningEffort || '',
+            }
           }
           setModels(nextModels)
           setPrompts(payload.prompts || {})
@@ -256,7 +283,11 @@ window.__ModuleLoader__.load({
       const actions = {
         setModel(roleId, value) {
           const [provider, model] = value.split('|')
-          setModels((prev) => ({ ...prev, [roleId]: { provider, model } }))
+          setModels((prev) => ({ ...prev, [roleId]: { ...(prev[roleId] || {}), provider, model } }))
+          setMessage('')
+        },
+        setEffort(roleId, value) {
+          setModels((prev) => ({ ...prev, [roleId]: { ...(prev[roleId] || {}), reasoningEffort: value } }))
           setMessage('')
         },
         setPrompt(roleId, text) {
@@ -274,7 +305,11 @@ window.__ModuleLoader__.load({
         try {
           const body = {
             roles: Object.fromEntries(
-              Object.entries(models).map(([id, value]) => [id, { provider: value.provider, model: value.model }]),
+              Object.entries(models).map(([id, value]) => [id, {
+                provider: value.provider,
+                model: value.model,
+                reasoningEffort: value.reasoningEffort || '',
+              }]),
             ),
             prompts: Object.fromEntries(Object.entries(prompts).map(([id, value]) => [id, value.text])),
           }

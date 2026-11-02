@@ -45,9 +45,21 @@ skill/                    技能本体（协议 + 角色契约 + 脚本）
   scripts/check_env.py    环境预检
 plugins/
   epi-research-preset/    把模式做成可选的一档 Agent 预设
-  epi-mode-ui/            设置页：每个角色的模型与提示词
+  epi-mode-ui/            设置页：每个角色的模型、推理强度与提示词
+  epi-dispatch/           角色派发工具：按角色施加模型 + 推理强度
   epi-guard/              删除守卫（只由预设挂载）
 ```
+
+### 为什么要自己的派发工具
+
+DSH 内置的 `workflow` 工具**明确拒绝 `reasoningEffort`**（传了会报错），只能跑会话默认档位；
+内置 `subagent` 的 `agentOptions` 支持它，但那是行级配置，改一次要动 YAML 重装。
+
+所以这里带了一个 `epi_dispatch` 工具：每次调用按角色读 `config/roles.json`，
+用 `agentOptions: { provider, model, reasoningEffort }` 起子 agent，并支持 `outputSchema` 拿结构化结论。
+于是「审稿人用 max、执行者用 low」是一条配置，不是一套部署改动。
+
+大规模 fan-out 或需要阶段图时仍用 `workflow`，那时推理强度跟会话默认。
 
 ## 安装
 

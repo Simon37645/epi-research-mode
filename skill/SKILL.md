@@ -72,18 +72,25 @@ MAJOR/REJECT → 回第 3 步，下一版本
   写明"承接自 vNNN、未在本版重跑"，否则溯源是假的。
 - 原始数据放项目根 `data/`，只读，不进版本目录——保证各版本看到的是同一份输入（`seal` 会把它的哈希钉进 manifest）。
 
-## 5. 派发（唯一合法通道）
+## 5. 派发
 
-用 `workflow` 工具的 `agent()`，因为它是本运行时里**唯一能给每个子 agent 单独指定 provider/model** 的通道。
+**默认用 `epi_dispatch`**：它按角色读 `<技能目录>/config/roles.json`，把**模型和推理强度**一起施加到子 agent。
 
-```js
-const out = await agent(task, { label: "executor-v003", provider: "...", model: "..." });
+```json
+{ "role": "reviewer", "label": "审稿人·v003", "prompt": "<完整任务>", "schema": { } }
 ```
 
-- 路由取自 `<技能目录>\config\roles.json`
-  （**技能目录下，不是项目目录**；由「设置 → 科研模式」页面写入，也能手工改；派发前读一次，别缓存）。
-  模型 id 用 provider 的注册名，不是显示名——`deepseek-flash` 的显示名是 `DeepSeek-V4.1-Flash`。
-  文件缺失或模型名写错时：该 agent 返回 `null`，回退到 `inherit` 继续，并在交付说明里写明降级。
+- `role` 只能是 `executor` / `plotter` / `reviewer`；模型、推理强度在「设置 → 科研模式」里配，存进 roles.json。
+- 给了 `schema` 就返回校验过的对象（审稿人必须给）；不给就返回文本。
+- **并行 = 把多次 `epi_dispatch` 放进同一条消息**一起调用。
+- 角色契约让子 agent 自己 `read "<技能目录>/roles/<role>.md"`，不要贴全文——单一事实来源，改了立刻生效。
+
+**什么时候改用 `workflow` 的 `agent()`**：需要阶段图、几十个成员的 fan-out、或 `pipeline` 分阶段时。
+它支持 `provider`/`model` 与 `label`/`phase`，但**明确拒绝 `reasoningEffort`**（传了会报错），
+只能跑会话默认档位。两者可混用：大规模 fan-out 用 workflow，逐轮把关用 `epi_dispatch`。
+
+- 模型 id 用 provider 的注册名，不是显示名——`deepseek-flash` 的显示名是 `DeepSeek-V4.1-Flash`。
+- 路由缺失或模型名写错时：回退到 `inherit` 继续，并在交付说明里写明降级，不要停工。
 - 角色契约不必贴全文：子 agent 有 `read`，让它 `read "<技能目录>/roles/executor.md"` 并遵守，单一事实来源、改了立刻生效。
   任务短、要省一次工具调用时才整段贴进 prompt——**两种方式选一种，不要各写一份**。
 - 需要多轮追问、或要用户在界面里看进度的单角色任务，可用 `subagent`，但它**不能指定模型**（继承主 agent）。

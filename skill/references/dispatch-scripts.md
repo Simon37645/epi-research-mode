@@ -36,7 +36,21 @@
 - `meta.phases` 里声明这几个阶段标题，跑之前界面就能显示计划。
 - 一个阶段内并行的成员，用 `parallel()` 发，别串行 await。
 
-## 三、脚本模板
+## 三、派发方式
+
+**默认用 `epi_dispatch`**（带推理强度），参数就是一段 JSON：
+
+```json
+{ "role": "executor", "label": "执行者·v003·主模型", "prompt": "<七项派发单>" }
+```
+
+- 并行：把多次 `epi_dispatch` 放进**同一条消息**。
+- 审稿人必须给 `schema`，拿结构化结论。
+- 模型与强度来自 `<技能目录>/config/roles.json`，改设置页即生效。
+- 下面这些 `workflow` 模板只用于**大规模 fan-out / 需要阶段图**：它接受 `provider`/`model`、`label`、`phase`，
+  但**拒绝 `reasoningEffort`**，跑会话默认档位。
+
+## 四、workflow 模板（fan-out / 阶段图）
 
 **角色提示词怎么给**：子 agent 有 `read` 工具。优先让它自己读角色文件（单一事实来源，改了立刻生效）：
 

@@ -23,7 +23,7 @@
 
                 Loop: user request → you write the analysis plan as v000 → dispatch executor → you verify and seal → dispatch reviewer → deliver only on ACCEPT; otherwise open the next version and redo. Keep every version on disk.
 
-                Route models from `config/roles.json`; dispatch through the workflow tool's agent() with explicit provider/model and a label of the form `role·vNNN·subtask`.
+                Dispatch with the `epi_dispatch` tool, naming the role — it applies that role's model and reasoning effort from `config/roles.json`. Use the workflow tool only for large fan-outs or phase grouping, where reasoning effort follows the session default. Label every dispatch `role·vNNN·subtask`.
           - id: agent-instructions
             name: '@deepseek-ai/dsh-agent-instructions'
             config:
@@ -49,7 +49,7 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
-              # 把下面这行换成你的「技能父目录」（epi_run.py where 会打印），
+              # epi-research-mode 不在任何默认技能根（.agents/skills、.dsh/skills）里，
               # 只有本预设通过这个目录看到它。别的模式扫不到，模型也就不会自动触发。
               customSkillDirs:
                 - REPLACE_WITH_YOUR_SKILLS_DIR
@@ -133,6 +133,8 @@
               searchTimeoutMs: 60000
           - id: present
             name: '@deepseek-ai/dsh-tool-present'
+          - id: epi-dispatch
+            name: '@local/dsh-epi-dispatch'
           - id: epi-guard
             name: '@local/dsh-epi-guard'
           - id: tool-plugin-manager
